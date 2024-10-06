@@ -20,6 +20,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.2.0
 
+      # List files to ensure gradlew.bat is present
+      - name: List files in directory
+        run: dir
+
       # Set up Java JDK 17
       - name: Setup Java JDK
         uses: actions/setup-java@v4.4.0
@@ -29,7 +33,7 @@ jobs:
 
       # Run Gradle build on Windows
       - name: Run Gradle build
-        run: gradlew.bat build
+        run: .\gradlew.bat build
 
       # Upload the APK as a build artifact
       - name: Upload Build Artifact
