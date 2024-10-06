@@ -21,7 +21,7 @@ jobs:
       - name: Setup Java JDK
         uses: actions/setup-java@v4.4.0
         with:
-          java-version: "17"
+          java-version: "1.8"
           distribution: "adopt"
       # to run abdroid project we need gradle go action set up below
       - name: Build with Gradle
