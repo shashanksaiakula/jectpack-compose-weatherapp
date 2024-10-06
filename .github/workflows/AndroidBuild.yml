@@ -1,1 +1,38 @@
+# name for work flow
+name : WeatherApp
+
+# event for the work(when work should start)
+on:
+  pull_request:
+    branches: [ main ]
+  push :
+    branches: [ main ]
+# we should define job to do
+jobs:
+# build apk
+  build :
+# os where to perform job
+    runs-on: ubuntu-latest
+# Steps to execute in side job
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.0
+# java jdk
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4.4.0
+        with:
+          java-version: "17"
+          distribution: "adopt"
+      # to run abdroid project we need gradle go action set up below
+      - name: Build with Gradle
+        run: ./gradlew build
+# need to upload build so need one more action
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.2.1-node20
+        with:
+          name:WeatherApp.apk
+        path : app/build/outputs/apk/debug/app-debug.apk
+
+
+
 
