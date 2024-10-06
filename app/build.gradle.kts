@@ -76,9 +76,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    val retrofit_version = "2.11.0"
+
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.coil.compose)
+    implementation(libs.androidx.core.splashscreen)
     
 }
