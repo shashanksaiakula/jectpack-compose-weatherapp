@@ -24,8 +24,15 @@ jobs:
           java-version: "17"
           distribution: "adopt"
       # to run abdroid project we need gradle go action set up below
-      - name: Build with Gradle
-        run: ./gradlew build
+      # - name: Build with Gradle
+      #   run: ./gradlew build
+      - name: Grant execute permission for gradlew (Windows)
+      run: |
+        git update-index --chmod=+x gradlew
+
+    - name: Run Gradle build
+      run: |
+        gradlew.bat build
 # need to upload build so need one more action
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.2.1-node20
