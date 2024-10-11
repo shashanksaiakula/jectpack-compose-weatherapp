@@ -25,11 +25,11 @@ fun ForgotPasswordScreen(navController: NavController,string: String) {
                 .fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            InputField("Email", Icons.Default.Email, false)
+//            InputField("Email", Icons.Default.Email, false)
             CustomButton(modifier = Modifier, buttonText = "Submit") {
                 navController.navigate("login")
             }
-            Text(string)
+//            Text(string)
         }
     }
 }

@@ -1,5 +1,8 @@
 package com.example.weatherapp.screens
 
+import android.app.Activity
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,8 +23,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,10 +36,21 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.weatherapp.MainViewModel
 import com.example.weatherapp.navigation.Navigation
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(navController: NavController, viewModel: MainViewModel, activity: Activity) {
+//    val coroutineScope = rememberCoroutineScope()
+    val loginState by viewModel.login.observeAsState()
+    var hasHandledLogin by remember { mutableStateOf(false) }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier
@@ -47,9 +63,13 @@ fun LoginScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            InputField("Email", Icons.Default.Email, false)
-            InputField("Password", Icons.Default.Lock, true)
-            TextUnderLine("Forgot Password"){
+            InputField("Email", Icons.Default.Email, false,email){
+                email = it
+            }
+            InputField("Password", Icons.Default.Lock, true,password){
+                password = it
+            }
+            TextUnderLine("Forgot Password") {
                 navController.navigate(Navigation.ForgotPassword(emai = "test@example.com").route)
             }
             CustomButton(
@@ -57,7 +77,9 @@ fun LoginScreen(navController: NavController) {
                     .padding(16.dp), // Padding from the bottom of the screen
                 buttonText = "Sign up"
             ) {
-                navController.navigate(Navigation.SignUp.route)
+//                coroutineScope.launch {
+            navController.navigate(Navigation.SignUp.route)
+//                }
             }
         }
         CustomButton(
@@ -65,13 +87,32 @@ fun LoginScreen(navController: NavController) {
                 .align(alignment = Alignment.BottomCenter)
                 .padding(16.dp), "Login"
         ) {
-            navController.navigate("home")
+                    viewModel.checkLogin(activity,email,password)
         }
+    }
+    loginState?.let {
+        if(!hasHandledLogin)
+        when (it) {
+            "sucess" -> {
+                navController.navigate(Navigation.weather.route)
+                hasHandledLogin = true
+            }
+            "fail" -> {
+                Toast.makeText(activity, "pleae try again", Toast.LENGTH_SHORT).show()
+                hasHandledLogin = true
+            }
+        }
+    }
+    val auth = Firebase.auth
+    val user = auth.currentUser
+    if(user !== null && !hasHandledLogin){
+        navController.navigate(Navigation.weather.route)
+        hasHandledLogin = true
     }
 }
 
 @Composable
-fun InputField(value: String, leadIcon: ImageVector, isPassWord: Boolean) {
+fun InputField(value: String, leadIcon: ImageVector, isPassWord: Boolean,textValue: String, onValueChage :(String)->Unit) {
     var input by remember {
         mutableStateOf("")
     }
@@ -84,10 +125,8 @@ fun InputField(value: String, leadIcon: ImageVector, isPassWord: Boolean) {
             modifier = Modifier
                 .weight(1f)
                 .padding(10.dp),
-            value = input,
-            onValueChange = {
-                input = it
-            },
+            value = textValue,
+            onValueChange = onValueChage,
             label = {
                 Text(value)
             },
@@ -116,7 +155,7 @@ fun InputField(value: String, leadIcon: ImageVector, isPassWord: Boolean) {
 }
 
 @Composable
-fun TextUnderLine(text: String ,forgotNav :()-> Unit) {
+fun TextUnderLine(text: String, forgotNav: () -> Unit) {
     Text(text = text,
         textDecoration = TextDecoration.Underline,
         modifier = Modifier.clickable {

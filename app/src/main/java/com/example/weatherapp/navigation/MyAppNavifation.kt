@@ -1,4 +1,5 @@
 package com.example.weatherapp.navigation
+import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,17 +20,17 @@ import com.example.weatherapp.screens.SignUpScreen
 import com.example.weatherapp.screens.Weather
 
 @Composable
-fun MyNavigation(viewModel: MainViewModel) {
+fun MyNavigation(viewModel: MainViewModel, activity :Activity) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Navigation.Login.route){
         composable(Navigation.Login.route) {
-            LoginScreen(navController)
+            LoginScreen(navController,viewModel,activity)
         }
         composable(Navigation.SignUp.route) {
             SignUpScreen(navController)
         }
         composable(Navigation.weather.route) {
-            Weather(viewModel)
+            Weather(viewModel,navController)
         }
         composable("Forgotpassword/{emai}") { backStackEntry ->
             val email = backStackEntry.arguments?.getString("emai")

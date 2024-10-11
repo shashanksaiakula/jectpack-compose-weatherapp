@@ -35,9 +35,9 @@ fun SignUpScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            InputField("Email", Icons.Default.Email, false)
-            InputField("Password", Icons.Default.Lock, true)
-            InputField("Confirm Password", Icons.Default.Lock, true)
+//            InputField("Email", Icons.Default.Email, false)
+//            InputField("Password", Icons.Default.Lock, true)
+//            InputField("Confirm Password", Icons.Default.Lock, true)
 //            TextUnderLine("Forgot Password")
         }
 

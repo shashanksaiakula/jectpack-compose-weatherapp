@@ -26,7 +26,6 @@ import androidx.navigation.compose.rememberNavController
 //import com.example.weatherapp.navigation.MyApp
 import com.example.weatherapp.navigation.MyNavigation
 //import com.example.weatherapp.navigation.MyNavigation
-import com.example.weatherapp.screens.ForgotPassword
 import com.example.weatherapp.screens.LoginScreen
 import com.example.weatherapp.screens.SignUpScreen
 import com.example.weatherapp.ui.theme.WeatherAppTheme
@@ -39,6 +38,7 @@ import com.google.gson.Gson
 
 private lateinit var auth: FirebaseAuth
 private val TAG = "check"
+
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
 
             // Scaffold layout or your main layout here
             WeatherAppTheme {
-                Scaffold (
+                Scaffold(
                     modifier = Modifier
                         .fillMaxSize()
 //                        .background(Color.Red) // Background of your app
@@ -80,32 +80,11 @@ class MainActivity : ComponentActivity() {
 //                    ForgotPassword()
 //            checkLogin()
 
-                    MyNavigation(mainViewModel)
+                    MyNavigation(mainViewModel,this)
 //                    MyApp()
-            }
                 }
+            }
         }
-    }
-
-    private fun checkLogin() {
-        auth.signInWithEmailAndPassword("shashanksai664@gmail.com", "Sai@1234")
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-//                    updateUI(user)
-                    val user = auth.currentUser;
-                          Log.d(TAG, "signInWithEmail:success ${Gson().toJson(user?.email)}")
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "signInWithEmail:failure", task.exception)
-                    Toast.makeText(
-                        baseContext,
-                        "Authentication failed.",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-//                    updateUI(null)
-                }
-            }
     }
 }
 

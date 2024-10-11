@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
@@ -35,17 +37,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.weatherapp.MainViewModel
 import com.example.weatherapp.api.UiState
 import com.example.weatherapp.data.Weather
+import com.example.weatherapp.navigation.Navigation
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun Weather(mainViewModel: MainViewModel) {
+fun Weather(mainViewModel: MainViewModel,navController: NavController) {
+
 
     val uiState by mainViewModel.uiState.observeAsState(UiState.Loading)
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -55,11 +63,14 @@ fun Weather(mainViewModel: MainViewModel) {
     var load by remember {
         mutableStateOf(false)
     }
+    val scrollState = rememberScrollState()
+    val auth : FirebaseAuth = Firebase.auth
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = Modifier.padding(5.dp),
+        modifier = Modifier.padding(5.dp)
+            .verticalScroll(scrollState),
     ) {
 
         Row(
@@ -113,6 +124,10 @@ fun Weather(mainViewModel: MainViewModel) {
                 val errorMessage = (uiState as UiState.Error).message
                 Text(text = errorMessage, color = Color.Red)
             }
+        }
+        CustomButton(modifier = Modifier, buttonText = "Logout") {
+            auth.signOut()
+            navController.navigate(Navigation.Login.route)
         }
 
     }
