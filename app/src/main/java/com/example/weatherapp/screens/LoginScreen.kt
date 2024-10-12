@@ -70,7 +70,7 @@ fun LoginScreen(navController: NavController, viewModel: MainViewModel, activity
                 password = it
             }
             TextUnderLine("Forgot Password") {
-                navController.navigate(Navigation.ForgotPassword(emai = "test@example.com").route)
+                navController.navigate(Navigation.ForgotPassword(emai = email).route)
             }
             CustomButton(
                 modifier = Modifier // Aligns button at the bottom center
@@ -98,14 +98,14 @@ fun LoginScreen(navController: NavController, viewModel: MainViewModel, activity
                 hasHandledLogin = true
             }
             "fail" -> {
-                Toast.makeText(activity, "pleae try again", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "please try again", Toast.LENGTH_SHORT).show()
                 hasHandledLogin = true
             }
         }
     }
     val auth = Firebase.auth
     val user = auth.currentUser
-    if(user !== null && !hasHandledLogin){
+    if(user !== null && !hasHandledLogin) {
         navController.navigate(Navigation.weather.route)
         hasHandledLogin = true
     }
@@ -113,9 +113,7 @@ fun LoginScreen(navController: NavController, viewModel: MainViewModel, activity
 
 @Composable
 fun InputField(value: String, leadIcon: ImageVector, isPassWord: Boolean,textValue: String, onValueChage :(String)->Unit) {
-    var input by remember {
-        mutableStateOf("")
-    }
+
     var visible by remember {
         mutableStateOf(false)
     }

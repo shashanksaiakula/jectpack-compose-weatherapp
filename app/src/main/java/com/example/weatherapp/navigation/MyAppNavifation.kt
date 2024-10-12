@@ -27,7 +27,7 @@ fun MyNavigation(viewModel: MainViewModel, activity :Activity) {
             LoginScreen(navController,viewModel,activity)
         }
         composable(Navigation.SignUp.route) {
-            SignUpScreen(navController)
+            SignUpScreen(navController,viewModel,activity)
         }
         composable(Navigation.weather.route) {
             Weather(viewModel,navController)
@@ -35,7 +35,7 @@ fun MyNavigation(viewModel: MainViewModel, activity :Activity) {
         composable("Forgotpassword/{emai}") { backStackEntry ->
             val email = backStackEntry.arguments?.getString("emai")
 //            if (email != null) {
-                ForgotPasswordScreen(navController, email!!)
+                ForgotPasswordScreen(navController, email!!,activity,viewModel)
 //            }
         }
 

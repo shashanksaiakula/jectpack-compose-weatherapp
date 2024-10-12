@@ -3,7 +3,6 @@ package com.example.weatherapp
 import android.app.Activity
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,7 +19,6 @@ import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
 
-
 class MainViewModel : ViewModel() {
 
     private val _uiState = MutableLiveData<UiState<Weather>>(UiState.Loading)
@@ -28,11 +26,18 @@ class MainViewModel : ViewModel() {
     private val _count = MutableLiveData<Int>(0)
     val count: LiveData<Int> get() = _count
     private val _login = MutableLiveData<String>()
-    val login :LiveData<String> get() = _login
-    private lateinit var auth: FirebaseAuth
+    val login: LiveData<String> get() = _login
+    private var auth: FirebaseAuth = Firebase.auth
     private val TAG = "check"
     private val _weather = MutableLiveData<Weather?>()
     val weather: MutableLiveData<Weather?> get() = _weather
+
+    private val _createAccount = MutableLiveData<String>()
+    val createAccount: MutableLiveData<String> get() = _createAccount
+
+    private val _changePassword = MutableLiveData<String>()
+    val changePassword: MutableLiveData<String> get() = _changePassword
+//        auth = Firebase.auth
 
     fun increasCount() {
         _count.value = _count.value?.plus(1)
@@ -66,9 +71,9 @@ class MainViewModel : ViewModel() {
             }
         }
     }
-    fun checkLogin(activity :Activity,email :String,password :String) {
-        auth = Firebase.auth
-        auth.signInWithEmailAndPassword(email,password)
+
+    fun checkLogin(activity: Activity, email: String, password: String) {
+        auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(activity) { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser;
@@ -77,7 +82,32 @@ class MainViewModel : ViewModel() {
                 } else {
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
                     _login.value = "fail"
+                }
+            }
+    }
 
+    fun signUp(activity: Activity, email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnSuccessListener(activity) {
+                Log.e(TAG, "SignUp: Sucessus $it")
+                _createAccount.value = "Sucesses"
+            }
+            .addOnFailureListener {
+                Log.e(TAG, "SignUp: fail $it")
+                _createAccount.value = "Fail"
+
+            }
+    }
+
+    fun changePassword(activity: Activity, email: String) {
+        auth.sendPasswordResetEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.e(TAG, "Change password: sucess")
+                    _changePassword.value = "Sucesses"
+                } else {
+                    Log.e(TAG, "Change password: fail")
+                    _changePassword.value = "Fail"
                 }
             }
     }
