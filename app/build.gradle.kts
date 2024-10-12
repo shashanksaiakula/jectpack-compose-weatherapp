@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -67,6 +68,7 @@ dependencies {
     // Add lifecycle and ViewModel dependencies
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.espresso.core)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -81,5 +83,13 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.coil.compose)
     implementation(libs.androidx.core.splashscreen)
-    
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.ui.auth)
+
+    implementation(libs.androidx.material.icons.core) // Replace with the latest version
+    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.accompanist.systemuicontroller) // Check for the latest version
+
+    implementation(libs.androidx.navigation.compose)
+
 }
